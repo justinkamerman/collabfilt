@@ -6,20 +6,11 @@ import getopt
 import logging
 import logging.config
 import re
-from nltk.stem.porter import PorterStemmer
-from nltk.corpus import stopwords
-from xml.etree import ElementTree
-from CollabFilt import Filt
+import csv
 
 sys.path.append(os.getcwd() + "/..")
-from pycloud import Api
+from CollabFilt import Filt
 
-input = None
-out = 'topicterms.dat'
-url = 'https://localhost/socialcloud/v1'
-appkey = 'myapp'
-username = 'me@radian6.com'
-password = 'mypassword'
 
 
 def usage():
@@ -27,96 +18,59 @@ def usage():
     print ("Options and arguments:")
     print ("-h          : help")
     print ("-i file     : load topic data from named file")
-    print ("-o file     : write topic-term matrix to named file. Default %s" % out)
-    print ("-u url      : Socialcloud url. Default %s" % url)
-    print ("-a appkey   : Socialcloud application key. Default %s" % appkey)
-    print ("-n username : Socialcloud username. Default %s" % username)
-    print ("-p password : Socialcloud password. Default %s\n" % password)
 
 
+#def main():
+# Process comand args
+global input, out, url, appkey, username, password
+input = "../data/test.dat"
+try:
+    opts, args = getopt.getopt(sys.argv[1:], "hi:")
+except getopt.GetoptError as err:
+    print str(err)
+    usage()
+    sys.exit(2)
 
-def main():
-    global input, out, url, appkey, username, password
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], "hi:u:a:n:p:")
-    except getopt.GetoptError as err:
-        print str(err)
+for o, a in opts:
+    if o in ("-h"):
+        usage()
+        sys.exit()
+    elif o in ("-i"):
+        input = a
+    else:
         usage()
         sys.exit(2)
 
-    for o, a in opts:
-        if o in ("-h"):
-            usage()
-            sys.exit()
-        elif o in ("-i"):
-            input = a
-        elif o in ("-o"):
-            out = a
-        elif o in ("-u"):
-            url = a
-        elif o in ("-a"):
-            appkey = a
-        elif o in ("-n"):
-            username = a
-        elif o in ("-p"):
-            password = a
-        else:
-            usage()
-            sys.exit(2)
-    
-    #try
-    topicsxml = ''
-    if input is not None:
-        topicsxml = ElementTree.parse(input).getroot()
-    else:
-        api = Api (url, appkey, username, password)
-        api.auth_authenticate()
-        topicsxml = api.topics()
-    
-    #print ElementTree.tostring(topicsxml)
-    #sys.exit()
-    filt = Filt(missingaszero=True)
-    #stemmer = PorterStemmer()
-    #for topic in topicsxml.findall('topicFilter'):
-    #    name = topic.findtext('name')
-    #    id = topic.findtext('topicFilterId')
-    #    ratings = {}
-    #    for query in topic.findall ('filterGroups/filterGroup/filterQueries/filterQuery/query'):
-    #        for term in re.split(r'\W+', query.text):
-    #            term = term.lower()
-    #            if len(term)>2 and term not in stopwords.words():
-    #                ratings[term] = ratings.get(term, 0) + 1
-    #
-    #    filt.addUser(id, ratings)
-    #    logger.debug ("Topic %s: %s: %s" % (id, name, ratings))
-    #    
-    #logger.info ("Processed %d topic profiles. Encountered %d unique terms." 
-    #             % (filt.getUserCount(), filt.getItemCount()))
+if not input:
+    print ("Input file not specified.")
+    usage()
+    sys.exit(2)
 
-    
-    filt2 = Filt(missingaszero=False)
-    filt2.addUser('U1', {'item101':5, 'item102':3, 'item103':2.5})
-    filt2.addUser('U2', {'item101':2, 'item102':2.5, 'item103':5})
-    filt2.addUser('U3', {'item101':2.5})
-    filt2.addUser('U4', {'item101':5, 'item103':3})
-    filt2.addUser('U5', {'item101':4, 'item102':3, 'item103':2})
-    print(filt2.dumpMatrix())
-    print
+# Load data from input file
+filt = Filt(missingaszero=False)
+with open(input, 'rb') as f:
+    # DictReader expects first row to define fieldnames
+    reader = csv.DictReader(f, delimiter=';', quotechar='"')
+    for line in reader:
+        #print("Adding user rating: %s (%s)" % (line['Book-Rating'], type(line['Book-Rating'])))
+        filt.addUserRatings(line['User-ID'], {line['ISBN']: line['Book-Rating']})
 
-    users = filt2.similarUsers({'item101':5, 'item102':3, 'item103':2.5},
-                               sim='pearson')
-    print (users)
 
-    filt2.addUserRatings('U6', {'item101':99, 'item103':100})
-    print(filt2.dumpMatrix())
+#try
+print filt.getUserCount()
+print filt.getItemCount()
 
-    #except Exception, exception:
-    #        logger.error("Error retrieving topic query terms: %s" % (exception))
-    #        raise exception
+#simUsers = filt.similarUsers({'042505313X':10, '0155061224':10}, n=10, sim='euclid')
+#print (simUsers)
+print filt.predictRatings({'042505313X':5, '0553073273':5}, n=100, m=5)
+
+#except Exception, exception:
+#        logger.error("Error retrieving topic query terms: %s" % (exception))
+#        raise exception
 
 
 
-if __name__ == '__main__': 
-    logging.config.fileConfig("logging.conf")
-    logger = logging.getLogger(__name__)
-    main() 
+#if __name__ == '__main__': 
+#    logging.config.fileConfig("logging.conf")
+#    logger = logging.getLogger(__name__)
+#    main() 

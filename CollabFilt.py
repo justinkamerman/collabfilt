@@ -1,25 +1,33 @@
 import logging
+from collections import defaultdict
 from  math import sqrt
 
 
 class Filt:
-    """Collaborative Filter
+    """ Collaborative Filter
     """
-
     def __init__ (self, missingaszero=False):
         """ 
-        :param missingaszero: ratings stored as a sparse
-        matrix. True if missing values are considered a rating of zero
+        :param missingaszero: ratings stored as a sparse matrix. True if missing values are considered a rating of zero
         :type missingaszero: Boolean
-        
         """
+
         self.items = set([])
-        """ [rating, ...] """
+        """ [rating, ...] 
+        """
         self.users = {}
         """ {userId:{rating:value},...} """
         self.logger = logging.getLogger(__name__)
         self.missingaszero = missingaszero
         """ Missing values assumed to be zero if True, else None """
+        self.similarityMetric = 'euclid'
+        """ User similarity metric. Defaults to Euclidean Distance. """
+
+
+    def setSimilarityMetric (self, similarityMetric):
+        """ Sets the user similarity metric 
+        """
+        self.similarityMetric = similarityMetric
 
 
     def dumpMatrix(self):
@@ -80,7 +88,7 @@ class Filt:
             self.users
         for (item, rating) in ratings.items():
             self.items.add(item)
-            user[item] = rating
+            user[item] = float(rating)
 
 
     def centerRatings(self):
@@ -129,7 +137,8 @@ class Filt:
             return (total/float(self.getItemCount()))
         else:
             return (total/float(len(ratings)))
-                     
+
+
 
     def euclid (self, user1, user2):
         """ Calculate Euclidean similarity between two users. Because
@@ -143,6 +152,9 @@ class Filt:
         :return: euclidean similarity between user1 and user2
         :rtype: float
         """
+        overlap = len(list(set(user1.keys()) & set(user2.keys())))
+        if overlap < 1 and not self.missingaszero:
+            return None
         dsqr = 0
         items = set(user1.keys())
         items.update(user2.keys())
@@ -170,7 +182,6 @@ class Filt:
         :return: euclidean similarity between user1 and user2
         :rtype: float
         """
-        dsqr = 0
         overlap = len(list(set(user1.keys()) & set(user2.keys())))
         if overlap < 2 and not self.missingaszero:
             return None
@@ -194,11 +205,15 @@ class Filt:
                     Sx2 += xi**2
                     Sy2 += yi**2
         
-            cor = (Sxy-Sx*Sy/N)/sqrt((Sx2-Sx**2/N)*(Sy2-Sy**2/N))
+            denominator = (Sx2-Sx**2/N)*(Sy2-Sy**2/N)
+            if denominator:
+                cor = (Sxy-Sx*Sy/N)/sqrt((Sx2-Sx**2/N)*(Sy2-Sy**2/N))
+            else:
+                cor = 0
             return cor
 
 
-    def similarUsers (self, target, sim='euclid', n=None):
+    def similarUsers (self, target, n=None, sim=None):
         """ Return ordered (ascending) list of similar users to the given users
         
         :param target: target item ratings
@@ -211,16 +226,54 @@ class Filt:
         :rtype: (userId, similarity) 
         """
         simlist = []
+        if not sim: sim = self.similarityMetric
         simFunction = getattr(self, sim)
         for (userId, ratings) in self.users.items():
             similarity = simFunction (target, ratings)
-            simlist.append(( userId, similarity))
+            if similarity:
+                simlist.append(( userId, similarity))
+                print ("%s => %d" % (userId, similarity))
             
         simlist.sort(key=lambda x: x[1], reverse=True)
         if n:
             del simlist[n:]
         return simlist
+
+
+    def predictRatings (self, target, n=None, m=None, weight=True):
+        """ Return predicted ratings for given user
         
+        :param target: target item ratings
+        :type target: dict {item: rating}
+        :param n: use n most similar users to predict ratings. Default all.
+        :param m: return m most highly rated items. Default all.
+        :param weight: Weight candidate item ratings by similarity score. Default True.
+        :type boolean:
+        :type n: int
+        :return: list of tuples ordered by estimates rating
+        :rtype: (userId, rating) 
+        """
+        totalRatings = defaultdict(int)
+        totalSims = defaultdict(int)
+        users = self.similarUsers (target, n)
+        print (users)
+        for (user, similarity) in users:
+            if weight:
+                weighting = similarity
+            else:
+                weighting = 1
+
+            for (item, rating) in self.getRatings(user).items():
+                if not target.has_key(item):
+                    totalRatings[item] += (rating * weighting)
+                    totalSims[item] += weighting
+            
+        rankings = [(item, total/totalSims[item]) for (item, total) in totalRatings.items()]
+        rankings.sort(key=lambda x: x[1], reverse=True)
+        if m:
+            del rankings[m:]
+        return rankings
+
 
 
 
