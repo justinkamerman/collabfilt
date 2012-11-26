@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to CollabFilt’s documentation! &mdash; CollabFilt v0.1 documentation</title>
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.1',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="CollabFilt v0.1 documentation" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li><a href="#">CollabFilt v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-CollabFilt">
+<h1>Welcome to CollabFilt&#8217;s documentation!<a class="headerlink" href="#module-CollabFilt" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<ul class="simple">
+</ul>
+<dl class="class">
+<dt id="CollabFilt.Filt">
+<em class="property">class </em><tt class="descclassname">CollabFilt.</tt><tt class="descname">Filt</tt><big>(</big><em>missingaszero=False</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collaborative Filter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>missingaszero</em> (Boolean) &#8211; ratings stored as a sparse matrix. True if missing values are considered a rating of zero</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="CollabFilt.Filt.addUser">
+<tt class="descname">addUser</tt><big>(</big><em>userId</em>, <em>ratings</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.addUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a user and associated ratings</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><em>userId</em> &#8211; </li>
+<li><em>ratings</em> &#8211; user ratings (sparse)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CollabFilt.Filt.addUserRatings">
+<tt class="descname">addUserRatings</tt><big>(</big><em>userId</em>, <em>ratings</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.addUserRatings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add ratings to an user. Creates user if it doesn&#8217;t already exist.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><em>userId</em> &#8211; </li>
+<li><em>ratings</em> &#8211; user ratings</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CollabFilt.Filt.centerRatings">
+<tt class="descname">centerRatings</tt><big>(</big><big>)</big><a class="headerlink" href="#CollabFilt.Filt.centerRatings" title="Permalink to this definition">¶</a></dt>
+<dd>Normalize the ratings</dd></dl>
+
+<dl class="method">
+<dt id="CollabFilt.Filt.dumpMatrix">
+<tt class="descname">dumpMatrix</tt><big>(</big><big>)</big><a class="headerlink" href="#CollabFilt.Filt.dumpMatrix" title="Permalink to this definition">¶</a></dt>
+<dd>Dump ratings matrix</dd></dl>
+
+<dl class="method">
+<dt id="CollabFilt.Filt.euclid">
+<tt class="descname">euclid</tt><big>(</big><em>user1</em>, <em>user2</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.euclid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate Euclidean similarity between two users. Because
+of the sparse storage format, we have to iterate through the
+key set union as opposed to the intersection.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><em>user1</em> (dict) &#8211; user ratings</li>
+<li><em>user2</em> &#8211; user ratings</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">euclidean similarity between user1 and user2</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CollabFilt.Filt.getItemCount">
+<tt class="descname">getItemCount</tt><big>(</big><big>)</big><a class="headerlink" href="#CollabFilt.Filt.getItemCount" title="Permalink to this definition">¶</a></dt>
+<dd>Return number of items</dd></dl>
+
+<dl class="method">
+<dt id="CollabFilt.Filt.getRatingMean">
+<tt class="descname">getRatingMean</tt><big>(</big><em>ratings</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.getRatingMean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get mean rating for a specific user</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>ratings</em> (dict {rating:value,...}) &#8211; ratings</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">mean user rating</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CollabFilt.Filt.getRatings">
+<tt class="descname">getRatings</tt><big>(</big><em>userId</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.getRatings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get ratings for a specific user</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>userId</em> &#8211; </td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">user ratings map</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CollabFilt.Filt.getUserCount">
+<tt class="descname">getUserCount</tt><big>(</big><big>)</big><a class="headerlink" href="#CollabFilt.Filt.getUserCount" title="Permalink to this definition">¶</a></dt>
+<dd>Return number of users</dd></dl>
+
+<dl class="method">
+<dt id="CollabFilt.Filt.pearson">
+<tt class="descname">pearson</tt><big>(</big><em>user1</em>, <em>user2</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.pearson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate pearson similarity between two users. Because
+of the sparse storage format, we have to iterate through the
+key set union as opposed to the intersection.    
+As required by Pearson, checks that there is more than a
+single factor overlap.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><em>user1</em> (dict) &#8211; user ratings</li>
+<li><em>user2</em> &#8211; user ratings</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">euclidean similarity between user1 and user2</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CollabFilt.Filt.predictRatings">
+<tt class="descname">predictRatings</tt><big>(</big><em>target</em>, <em>n=None</em>, <em>m=None</em>, <em>weight=True</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.predictRatings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return predicted ratings for given user</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><em>target</em> (dict {item: rating}) &#8211; target item ratings</li>
+<li><em>n</em> (int) &#8211; use n most similar users to predict ratings. Default all.</li>
+<li><em>m</em> &#8211; return m most highly rated items. Default all.</li>
+<li><em>weight</em> &#8211; Weight candidate item ratings by similarity score. Default True.</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of tuples ordered by estimates rating</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(userId, rating)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CollabFilt.Filt.setSimilarityMetric">
+<tt class="descname">setSimilarityMetric</tt><big>(</big><em>similarityMetric</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.setSimilarityMetric" title="Permalink to this definition">¶</a></dt>
+<dd>Sets the user similarity metric</dd></dl>
+
+<dl class="method">
+<dt id="CollabFilt.Filt.similarUsers">
+<tt class="descname">similarUsers</tt><big>(</big><em>target</em>, <em>n=None</em>, <em>sim=None</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.similarUsers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return ordered (ascending) list of similar users to the given users</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><em>target</em> (dict {item: rating}) &#8211; target item ratings</li>
+<li><em>sim</em> (function (self, &lt;user1 ratings dict&gt;, &lt;user2 ratings dict&gt;)) &#8211; similarity calculator function</li>
+<li><em>n</em> (int) &#8211; return top n users. Default all.</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of tuples ordered by similarity</p>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(userId, similarity)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference external" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference external" href="modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference external" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="#">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Welcome to CollabFilt&#8217;s documentation!</a><ul>
+</ul>
+</li>
+<li><a class="reference external" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="sources/index.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li><a href="#">CollabFilt v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2012, Justin Kamerman.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
+    </div>
+  </body>
+</html>

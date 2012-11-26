@@ -1,0 +1,18 @@
+# Sphinx inventory version 1
+# Project: CollabFilt
+# Version: 0.1
+CollabFilt mod index.html
+CollabFilt.Filt.getRatings method index.html
+CollabFilt.Filt.addUserRatings method index.html
+CollabFilt.Filt class index.html
+CollabFilt.Filt.euclid method index.html
+CollabFilt.Filt.similarUsers method index.html
+CollabFilt.Filt.setSimilarityMetric method index.html
+CollabFilt.Filt.dumpMatrix method index.html
+CollabFilt.Filt.getUserCount method index.html
+CollabFilt.Filt.pearson method index.html
+CollabFilt.Filt.predictRatings method index.html
+CollabFilt.Filt.centerRatings method index.html
+CollabFilt.Filt.addUser method index.html
+CollabFilt.Filt.getRatingMean method index.html
+CollabFilt.Filt.getItemCount method index.html
