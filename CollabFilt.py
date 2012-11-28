@@ -96,7 +96,7 @@ class Filt:
 
         """
         for (userId, ratings) in self.users.items():
-            mean = self.getRatingMean(ratings)
+            mean = self.getRatingsMean(ratings)
             if not mean == 0:
                 for item in self.items:
                     unnorm = self.users[userId].get(item)
@@ -113,11 +113,16 @@ class Filt:
         :return: user ratings map
         :rtype: dict
         """
-        return self.users[userId]
+        if self.missingaszero:
+            ratings = dict.fromkeys(self.items, 0)
+            ratings.update(self.users[userId])
+            return ratings
+        else:
+            return self.users[userId]
 
     
-    def getRatingMean (self, ratings):
-        """ Get mean rating for a specific user
+    def getRatingsMean (self, ratings):
+        """ Calculate mean of a given collection of item ratings
         
         :param ratings: ratings 
         :type ratings: dict {rating:value,...}
@@ -130,12 +135,6 @@ class Filt:
             total = 0
             for value in ratings.values():
                 total += value
-
-        # If missing values are assigned a valid rating by default
-        # then we need to include these in our calculation
-        if self.missingaszero:
-            return (total/float(self.getItemCount()))
-        else:
             return (total/float(len(ratings)))
 
 
@@ -263,6 +262,7 @@ class Filt:
             else:
                 weighting = 1
 
+            # Sum similar user ratings for items not rated by the target user
             for (item, rating) in self.getRatings(user).items():
                 if not target.has_key(item):
                     totalRatings[item] += (rating * weighting)
