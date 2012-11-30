@@ -96,7 +96,7 @@ class Filt:
 
         """
         for (userId, ratings) in self.users.items():
-            mean = self.getRatingsMean(ratings)
+            mean = self.getRatingMean(ratings)
             if not mean == 0:
                 for item in self.items:
                     unnorm = self.users[userId].get(item)
@@ -120,8 +120,22 @@ class Filt:
         else:
             return self.users[userId]
 
+
+    def getAllRatings (self):
+        """ Get ratings of each user
+        
+        :return: list of user item rating tuples
+        :rtype: list of (userId, item, rating)
+        """
+        tuples = []
+        for (userId, ratings) in self.users.items():
+            for (item, rating) in self.getRatings(userId).items():
+                tuples.append((userId, item, rating))
+
+        return tuples
+
     
-    def getRatingsMean (self, ratings):
+    def getRatingMean (self, ratings):
         """ Calculate mean of a given collection of item ratings
         
         :param ratings: ratings 
@@ -137,6 +151,27 @@ class Filt:
                 total += value
             return (total/float(len(ratings)))
 
+
+    def getRatingMeans(self):
+        """ Get mean rating of each user
+        
+        :return: mean rating given by each user
+        :rtype: list of (userId, rating_mean) tuples
+        """
+        return [(userId, self.getRatingMean(self.getRatings(userId))) 
+                for userId in self.users.keys()]
+
+
+    def getRatingCounts(self):
+        """ Get the number of items rated by each user
+        
+        :return: list of the number of items ranked by each user
+        :rtype: list of (userId, rated_item_count) tuples
+        """
+        if self.missingaszero:
+            return [(userId, self.getItemCount()) for userId in self.users.keys()]
+        else:
+            return [(userId, len(ratings)) for (userId, ratings) in self.users.items()]
 
 
     def euclid (self, user1, user2):
@@ -231,7 +266,6 @@ class Filt:
             similarity = simFunction (target, ratings)
             if similarity:
                 simlist.append(( userId, similarity))
-                print ("%s => %d" % (userId, similarity))
             
         simlist.sort(key=lambda x: x[1], reverse=True)
         if n:
@@ -255,7 +289,6 @@ class Filt:
         totalRatings = defaultdict(int)
         totalSims = defaultdict(int)
         users = self.similarUsers (target, n)
-        print (users)
         for (user, similarity) in users:
             if weight:
                 weighting = similarity
