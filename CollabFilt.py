@@ -208,6 +208,9 @@ class Filt:
         key set union as opposed to the intersection.    
         As required by Pearson, checks that there is more than a
         single factor overlap.
+
+        Note: Pearson coefficient is only defined if the variance of
+        both vectors are nonzero.
         
         :param user1: user ratings
         :type user1: dict
@@ -220,12 +223,12 @@ class Filt:
         if overlap < 2 and not self.missingaszero:
             return None
         else:
-            Sx = 0
-            Sy = 0
-            Sxy = 0
-            Sx2 = 0
-            Sy2 = 0
-            N = 0
+            Sx = 0.0
+            Sy = 0.0
+            Sxy = 0.0
+            Sx2 = 0.0
+            Sy2 = 0.0
+            N = 0.0
             items = set(user1.keys())
             items.update(user2.keys())
             for item in items:
@@ -243,7 +246,7 @@ class Filt:
             if denominator:
                 cor = (Sxy-Sx*Sy/N)/sqrt((Sx2-Sx**2/N)*(Sy2-Sy**2/N))
             else:
-                cor = 0
+                cor = None
             return cor
 
 
@@ -273,7 +276,7 @@ class Filt:
         return simlist
 
 
-    def predictRatings (self, target, n=None, m=None, weight=True):
+    def predictRatings (self, target, n=None, m=None, weight=True, sim=None):
         """ Return predicted ratings for given user
         
         :param target: target item ratings
@@ -288,7 +291,7 @@ class Filt:
         """
         totalRatings = defaultdict(int)
         totalSims = defaultdict(int)
-        users = self.similarUsers (target, n)
+        users = self.similarUsers (target, n, sim=sim)
         for (user, similarity) in users:
             if weight:
                 weighting = similarity
@@ -299,9 +302,9 @@ class Filt:
             for (item, rating) in self.getRatings(user).items():
                 if not target.has_key(item):
                     totalRatings[item] += (rating * weighting)
-                    totalSims[item] += weighting
-            
-        rankings = [(item, total/totalSims[item]) for (item, total) in totalRatings.items()]
+                    totalSims[item] += abs(weighting)
+                
+        rankings = [(item, total/totalSims[item]) for (item, total) in totalRatings.items() if totalSims[item] != 0]
         rankings.sort(key=lambda x: x[1], reverse=True)
         if m:
             del rankings[m:]

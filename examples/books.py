@@ -12,18 +12,21 @@ sys.path.append(os.getcwd() + "/..")
 from CollabFilt import Filt
 
 
-
 def usage():
     print ("Usage: %s [-h] [-i file]")
     print ("Options and arguments:")
     print ("-h          : help")
     print ("-i file     : load topic data from named file")
 
+def mapISBN (ratings):
+    for (isbn, rating) in ratings:
+        print ("%s: %s %s" % (isbn, rating, books[isbn]))
 
-#def main():
+
 # Process comand args
-global input, out, url, appkey, username, password
-input = "../data/test.dat"
+input = "../data/BX-Book-Ratings.csv"
+bookinput = "../data/BX-Books.csv"
+books = {}
 try:
     opts, args = getopt.getopt(sys.argv[1:], "hi:")
 except getopt.GetoptError as err:
@@ -46,31 +49,48 @@ if not input:
     usage()
     sys.exit(2)
 
-# Load data from input file
+
+# Load titles
+with open(bookinput, 'rb') as f:
+    # DictReader expects first row to define fieldnames
+    reader = csv.DictReader(f, delimiter=';', quotechar='"')
+    for line in reader:
+        books[line['ISBN']] = line['Book-Title'], line['Book-Author']
+
+# Load ratings from input file
 filt = Filt(missingaszero=False)
 with open(input, 'rb') as f:
     # DictReader expects first row to define fieldnames
     reader = csv.DictReader(f, delimiter=';', quotechar='"')
     for line in reader:
-        #print("Adding user rating: %s (%s)" % (line['Book-Rating'], type(line['Book-Rating'])))
         filt.addUserRatings(line['User-ID'], {line['ISBN']: line['Book-Rating']})
 
 
-#try
-print filt.getUserCount()
-print filt.getItemCount()
+print ("User count: %d" %filt.getUserCount())
+print ("Item count: %d" % filt.getItemCount())
 
-#simUsers = filt.similarUsers({'042505313X':10, '0155061224':10}, n=10, sim='euclid')
-#print (simUsers)
-print filt.predictRatings({'042505313X':5, '0553073273':5}, n=100, m=5)
+# "042505313X";"Dune";"Frank Herbert"
+# "083760463X";"The Martian Way and Other Stories";"Isaac Asimov"
+# "0425042367";"Podkayne of Mars";"Robert A. Heinlein"
+# "0425043770";"Stranger Strg Lnd";"Robert A. Heinlein"
+# "0425043797";"Dune Messiah";"Frank Herbert"
+# "0446354872";"Batman: The Novelization"
+user1 = {'042505313X':10, '083760463X':7, "0425042367":8, "0425043770":6, "0425043797":10, '0446354872': 7.0}
+print ("\nUser\n====")
+mapISBN ([(isbn, rating) for (isbn, rating) in user1.items()])
 
-#except Exception, exception:
-#        logger.error("Error retrieving topic query terms: %s" % (exception))
-#        raise exception
+topnitems = 10
+print ("\nEuclid\n======")
+print ("Top estimated ratings for user:")
+predicted = filt.predictRatings(user1, m=topnitems, sim='euclid')
+mapISBN(predicted)
+print ("\nSimilar to users:")
+print filt.similarUsers(user1, sim='euclid')
 
+print ("\nPearson\n=======")
+print ("Top estimated ratings for user:")
+predicted = filt.predictRatings(user1, m=topnitems, sim='pearson')
+mapISBN(predicted)
+print ("\nSimilar to users:")
+print filt.similarUsers(user1, sim='pearson')
 
-
-#if __name__ == '__main__': 
-#    logging.config.fileConfig("logging.conf")
-#    logger = logging.getLogger(__name__)
-#    main() 
