@@ -5,8 +5,7 @@ from  math import sqrt
 
 class Filt:
     """ Item-based collaborative filter implementation in Python
-    inspired by RecommenderLab R packageItem-based collaborative
-    filter implementation. Uses sparse matrix storage format.
+    inspired by RecommenderLab R package. Uses sparse matrix storage format.
 
     :Example:
     >>> from CollabFilt import Filt
