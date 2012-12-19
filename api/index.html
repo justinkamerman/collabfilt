@@ -1,25 +1,31 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to CollabFilt’s documentation! &mdash; CollabFilt v0.1 documentation</title>
+    <title>Welcome to CollabFilt’s documentation! &mdash; CollabFilt 0.1 documentation</title>
+    
     <link rel="stylesheet" href="static/default.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '#',
+        URL_ROOT:    '',
         VERSION:     '0.1',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="CollabFilt v0.1 documentation" href="#" /> 
+    <link rel="top" title="CollabFilt 0.1 documentation" href="#" /> 
   </head>
   <body>
     <div class="related">
@@ -29,9 +35,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
-        <li><a href="#">CollabFilt v0.1 documentation</a> &raquo;</li> 
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="#">CollabFilt 0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -40,23 +46,65 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-CollabFilt">
-<h1>Welcome to CollabFilt&#8217;s documentation!<a class="headerlink" href="#module-CollabFilt" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="welcome-to-collabfilt-s-documentation">
+<h1>Welcome to CollabFilt&#8217;s documentation!<a class="headerlink" href="#welcome-to-collabfilt-s-documentation" title="Permalink to this headline">¶</a></h1>
 <p>Contents:</p>
+<div class="toctree-wrapper compound">
 <ul class="simple">
 </ul>
-<dl class="class">
+</div>
+<span class="target" id="module-CollabFilt"></span><dl class="class">
 <dt id="CollabFilt.Filt">
 <em class="property">class </em><tt class="descclassname">CollabFilt.</tt><tt class="descname">Filt</tt><big>(</big><em>missingaszero=False</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Collaborative Filter</p>
+<dd><p>Item-based collaborative filter implementation in Python
+inspired by RecommenderLab R packageItem-based collaborative
+filter implementation. Uses sparse matrix storage format.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>missingaszero</em> (Boolean) &#8211; ratings stored as a sparse matrix. True if missing values are considered a rating of zero</td>
+<tr class="field-odd field"><th class="field-name">Example :</th><td class="field-body"></td>
 </tr>
 </tbody>
 </table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">CollabFilt</span> <span class="kn">import</span> <span class="n">Filt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt</span> <span class="o">=</span> <span class="n">Filt</span><span class="p">(</span><span class="n">missingaszero</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt</span><span class="o">.</span><span class="n">addUser</span><span class="p">(</span><span class="s">&#39;u1&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;i1&#39;</span><span class="p">:</span><span class="mf">5.0</span><span class="p">,</span> <span class="s">&#39;i2&#39;</span><span class="p">:</span><span class="mf">3.0</span><span class="p">,</span> <span class="s">&#39;i3&#39;</span><span class="p">:</span><span class="mf">2.5</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt</span><span class="o">.</span><span class="n">addUser</span><span class="p">(</span><span class="s">&#39;u2&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;i1&#39;</span><span class="p">:</span><span class="mf">2.0</span><span class="p">,</span> <span class="s">&#39;i2&#39;</span><span class="p">:</span><span class="mf">2.5</span><span class="p">,</span> <span class="s">&#39;i3&#39;</span><span class="p">:</span><span class="mf">5.0</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt</span><span class="o">.</span><span class="n">addUser</span><span class="p">(</span><span class="s">&#39;u3&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;i1&#39;</span><span class="p">:</span><span class="mf">2.5</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt</span><span class="o">.</span><span class="n">addUser</span><span class="p">(</span><span class="s">&#39;u4&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;i1&#39;</span><span class="p">:</span><span class="mf">5.0</span><span class="p">,</span> <span class="s">&#39;i3&#39;</span><span class="p">:</span><span class="mf">3.0</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt</span><span class="o">.</span><span class="n">addUser</span><span class="p">(</span><span class="s">&#39;u5&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;i1&#39;</span><span class="p">:</span><span class="mf">4.0</span><span class="p">,</span> <span class="s">&#39;i2&#39;</span><span class="p">:</span><span class="mf">3.0</span><span class="p">,</span> <span class="s">&#39;i3&#39;</span><span class="p">:</span><span class="mf">2.0</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt</span><span class="o">.</span><span class="n">dumpMatrix</span><span class="p">()</span>
+<span class="go">    id i1 i2 i3</span>
+<span class="go">    u1 5.0 3.0 2.5</span>
+<span class="go">    u2 2.0 2.5 5.0</span>
+<span class="go">    u3 2.5 None None</span>
+<span class="go">    u4 5.0 None 3.0</span>
+<span class="go">    u5 4.0 3.0 2.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt</span><span class="o">.</span><span class="n">getUserCount</span><span class="p">()</span>
+<span class="go">    5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt</span><span class="o">.</span><span class="n">getItemCount</span><span class="p">()</span>
+<span class="go">    3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt</span><span class="o">.</span><span class="n">similarUsers</span><span class="p">({</span><span class="s">&#39;i1&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s">&#39;i3&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span> <span class="n">sim</span><span class="o">=</span><span class="s">&#39;euclid&#39;</span><span class="p">)</span>
+<span class="go">    [(&#39;u3&#39;, 0.6666666666666666),</span>
+<span class="go">     (&#39;u5&#39;, 0.3090169943749474),</span>
+<span class="go">     (&#39;u1&#39;, 0.22966848451216434),</span>
+<span class="go">     (&#39;u4&#39;, 0.21712927295533244),</span>
+<span class="go">     (&#39;u2&#39;, 0.2)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filt</span><span class="o">.</span><span class="n">predictRatings</span><span class="p">({</span><span class="s">&#39;i1&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s">&#39;i3&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span> <span class="n">sim</span><span class="o">=</span><span class="s">&#39;pearson&#39;</span><span class="p">)</span>
+<span class="go">    [(&#39;i2&#39;, 1.1666666666666667)]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>missingaszero</strong> &#8211; ratings stored as a sparse matrix. True</td>
+</tr>
+</tbody>
+</table>
+<p>if missing values are considered a rating of zero
+:type missingaszero: Boolean</p>
 <dl class="method">
 <dt id="CollabFilt.Filt.addUser">
 <tt class="descname">addUser</tt><big>(</big><em>userId</em>, <em>ratings</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.addUser" title="Permalink to this definition">¶</a></dt>
@@ -65,9 +113,9 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><em>userId</em> &#8211; </li>
-<li><em>ratings</em> &#8211; user ratings (sparse)</li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>userId</strong> &#8211; </li>
+<li><strong>ratings</strong> &#8211; user ratings (sparse)</li>
 </ul>
 </td>
 </tr>
@@ -83,9 +131,9 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><em>userId</em> &#8211; </li>
-<li><em>ratings</em> &#8211; user ratings</li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>userId</strong> &#8211; </li>
+<li><strong>ratings</strong> &#8211; user ratings</li>
 </ul>
 </td>
 </tr>
@@ -96,12 +144,14 @@
 <dl class="method">
 <dt id="CollabFilt.Filt.centerRatings">
 <tt class="descname">centerRatings</tt><big>(</big><big>)</big><a class="headerlink" href="#CollabFilt.Filt.centerRatings" title="Permalink to this definition">¶</a></dt>
-<dd>Normalize the ratings</dd></dl>
+<dd><p>Normalize the ratings</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="CollabFilt.Filt.dumpMatrix">
 <tt class="descname">dumpMatrix</tt><big>(</big><big>)</big><a class="headerlink" href="#CollabFilt.Filt.dumpMatrix" title="Permalink to this definition">¶</a></dt>
-<dd>Dump ratings matrix</dd></dl>
+<dd><p>Dump ratings matrix</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="CollabFilt.Filt.euclid">
@@ -113,16 +163,16 @@ key set union as opposed to the intersection.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><em>user1</em> (dict) &#8211; user ratings</li>
-<li><em>user2</em> &#8211; user ratings</li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user1</strong> (<em>dict</em>) &#8211; user ratings</li>
+<li><strong>user2</strong> &#8211; user ratings</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">euclidean similarity between user1 and user2</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">euclidean similarity between user1 and user2</p>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
 </td>
 </tr>
 </tbody>
@@ -132,39 +182,56 @@ key set union as opposed to the intersection.</p>
 <dl class="method">
 <dt id="CollabFilt.Filt.getItemCount">
 <tt class="descname">getItemCount</tt><big>(</big><big>)</big><a class="headerlink" href="#CollabFilt.Filt.getItemCount" title="Permalink to this definition">¶</a></dt>
-<dd>Return number of items</dd></dl>
+<dd><p>Return number of items</p>
+</dd></dl>
 
 <dl class="method">
-<dt id="CollabFilt.Filt.getRatingMean">
-<tt class="descname">getRatingMean</tt><big>(</big><em>ratings</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.getRatingMean" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get mean rating for a specific user</p>
+<dt id="CollabFilt.Filt.getItemRatingCounts">
+<tt class="descname">getItemRatingCounts</tt><big>(</big><big>)</big><a class="headerlink" href="#CollabFilt.Filt.getItemRatingCounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of ratings per item</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>ratings</em> (dict {rating:value,...}) &#8211; ratings</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of the number of ratings for each item</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">mean user rating</td>
-</tr>
-<tr class="field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of (item, rating_count) tuples</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="CollabFilt.Filt.getRatings">
-<tt class="descname">getRatings</tt><big>(</big><em>userId</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.getRatings" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get ratings for a specific user</p>
+<dt id="CollabFilt.Filt.getItemRatings">
+<tt class="descname">getItemRatings</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.getItemRatings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all user ratings for a specific item</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>userId</em> &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>item</strong> &#8211; item name</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">user ratings map</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">item ratings map (indexed by user)</td>
 </tr>
-<tr class="field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CollabFilt.Filt.getRatingMean">
+<tt class="descname">getRatingMean</tt><big>(</big><em>ratings</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.getRatingMean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate mean of a given collection of item ratings</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ratings</strong> (<em>dict {rating:value,...}</em>) &#8211; ratings</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">mean user rating</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
 </tr>
 </tbody>
 </table>
@@ -173,7 +240,54 @@ key set union as opposed to the intersection.</p>
 <dl class="method">
 <dt id="CollabFilt.Filt.getUserCount">
 <tt class="descname">getUserCount</tt><big>(</big><big>)</big><a class="headerlink" href="#CollabFilt.Filt.getUserCount" title="Permalink to this definition">¶</a></dt>
-<dd>Return number of users</dd></dl>
+<dd><p>Return number of users</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CollabFilt.Filt.getUserRatingCounts">
+<tt class="descname">getUserRatingCounts</tt><big>(</big><big>)</big><a class="headerlink" href="#CollabFilt.Filt.getUserRatingCounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of items rated by each user</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of the number of items ranked by each user</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of (userId, rated_item_count) tuples</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CollabFilt.Filt.getUserRatings">
+<tt class="descname">getUserRatings</tt><big>(</big><em>userId</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.getUserRatings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all item ratings for a specific user</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>userId</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">user ratings map (indexed by item)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CollabFilt.Filt.items">
+<tt class="descname">items</tt><em class="property"> = None</em><a class="headerlink" href="#CollabFilt.Filt.items" title="Permalink to this definition">¶</a></dt>
+<dd><p>[rating, ...]</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CollabFilt.Filt.missingaszero">
+<tt class="descname">missingaszero</tt><em class="property"> = None</em><a class="headerlink" href="#CollabFilt.Filt.missingaszero" title="Permalink to this definition">¶</a></dt>
+<dd><p>Missing values assumed to be zero if True, else None</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="CollabFilt.Filt.pearson">
@@ -183,20 +297,22 @@ of the sparse storage format, we have to iterate through the
 key set union as opposed to the intersection.    
 As required by Pearson, checks that there is more than a
 single factor overlap.</p>
+<p>Note: Pearson coefficient is only defined if the variance of
+both vectors are nonzero.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><em>user1</em> (dict) &#8211; user ratings</li>
-<li><em>user2</em> &#8211; user ratings</li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user1</strong> (<em>dict</em>) &#8211; user ratings</li>
+<li><strong>user2</strong> &#8211; user ratings</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">euclidean similarity between user1 and user2</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">euclidean similarity between user1 and user2</p>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
 </td>
 </tr>
 </tbody>
@@ -205,24 +321,24 @@ single factor overlap.</p>
 
 <dl class="method">
 <dt id="CollabFilt.Filt.predictRatings">
-<tt class="descname">predictRatings</tt><big>(</big><em>target</em>, <em>n=None</em>, <em>m=None</em>, <em>weight=True</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.predictRatings" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">predictRatings</tt><big>(</big><em>target</em>, <em>n=None</em>, <em>m=None</em>, <em>weight=True</em>, <em>sim=None</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.predictRatings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return predicted ratings for given user</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><em>target</em> (dict {item: rating}) &#8211; target item ratings</li>
-<li><em>n</em> (int) &#8211; use n most similar users to predict ratings. Default all.</li>
-<li><em>m</em> &#8211; return m most highly rated items. Default all.</li>
-<li><em>weight</em> &#8211; Weight candidate item ratings by similarity score. Default True.</li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>target</strong> (<em>dict {item: rating}</em>) &#8211; target item ratings</li>
+<li><strong>n</strong> (<em>int</em>) &#8211; use n most similar users to predict ratings. Default all.</li>
+<li><strong>m</strong> &#8211; return m most highly rated items. Default all.</li>
+<li><strong>weight</strong> &#8211; Weight candidate item ratings by similarity score. Default True.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of tuples ordered by estimates rating</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of tuples ordered by estimates rating</p>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(userId, rating)</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(userId, rating)</p>
 </td>
 </tr>
 </tbody>
@@ -232,7 +348,8 @@ single factor overlap.</p>
 <dl class="method">
 <dt id="CollabFilt.Filt.setSimilarityMetric">
 <tt class="descname">setSimilarityMetric</tt><big>(</big><em>similarityMetric</em><big>)</big><a class="headerlink" href="#CollabFilt.Filt.setSimilarityMetric" title="Permalink to this definition">¶</a></dt>
-<dd>Sets the user similarity metric</dd></dl>
+<dd><p>Sets the user similarity metric</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="CollabFilt.Filt.similarUsers">
@@ -242,21 +359,33 @@ single factor overlap.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><em>target</em> (dict {item: rating}) &#8211; target item ratings</li>
-<li><em>sim</em> (function (self, &lt;user1 ratings dict&gt;, &lt;user2 ratings dict&gt;)) &#8211; similarity calculator function</li>
-<li><em>n</em> (int) &#8211; return top n users. Default all.</li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>target</strong> (<em>dict {item: rating}</em>) &#8211; target item ratings</li>
+<li><strong>sim</strong> (<em>function (self, &lt;user1 ratings dict&gt;, &lt;user2 ratings dict&gt;)</em>) &#8211; similarity calculator function</li>
+<li><strong>n</strong> (<em>int</em>) &#8211; return top n users. Default all.</li>
 </ul>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of tuples ordered by similarity</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of tuples ordered by similarity</p>
 </td>
 </tr>
-<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(userId, similarity)</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(userId, similarity)</p>
 </td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CollabFilt.Filt.similarityMetric">
+<tt class="descname">similarityMetric</tt><em class="property"> = None</em><a class="headerlink" href="#CollabFilt.Filt.similarityMetric" title="Permalink to this definition">¶</a></dt>
+<dd><p>User similarity metric. Defaults to Euclidean Distance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="CollabFilt.Filt.users">
+<tt class="descname">users</tt><em class="property"> = None</em><a class="headerlink" href="#CollabFilt.Filt.users" title="Permalink to this definition">¶</a></dt>
+<dd><p>{userId:{rating:value},...}</p>
 </dd></dl>
 
 </dd></dl>
@@ -265,9 +394,9 @@ single factor overlap.</p>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li><a class="reference external" href="genindex.html"><em>Index</em></a></li>
-<li><a class="reference external" href="modindex.html"><em>Module Index</em></a></li>
-<li><a class="reference external" href="search.html"><em>Search Page</em></a></li>
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
 </ul>
 </div>
 
@@ -277,32 +406,32 @@ single factor overlap.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="#">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#">Welcome to CollabFilt&#8217;s documentation!</a><ul>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to CollabFilt&#8217;s documentation!</a><ul>
 </ul>
 </li>
-<li><a class="reference external" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="sources/index.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -314,14 +443,14 @@ single factor overlap.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="#">CollabFilt v0.1 documentation</a> &raquo;</li> 
+        <li><a href="#">CollabFilt 0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2012, Justin Kamerman.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
+        &copy; Copyright 2012, Justin Kamerman.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>
