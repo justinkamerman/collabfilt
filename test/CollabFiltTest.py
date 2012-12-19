@@ -26,64 +26,53 @@ class CollabFiltTest(unittest.TestCase):
         self.filtZE.addUser('u4', {'i1':5.0, 'i3':3.0})
         self.filtZE.addUser('u5', {'i1':4.0, 'i2':3.0, 'i3':2.0})
 
+
     def tearDown(self):
         log.debug("teardown...")
+
 
     def test_GetUserCount(self):
         self.assertEqual(self.filtNA.getUserCount(), 5)
         self.assertEqual(self.filtZE.getUserCount(), 5)
 
+
     def test_GetItemCount(self):
         self.assertEqual(self.filtNA.getItemCount(), 3)
         self.assertEqual(self.filtZE.getItemCount(), 3)
-        
-    def test_GetAllRatings(self):
-        # NA
-        tuples = self.filtNA.getAllRatings()
-        self.assertEqual(tuples, [('u5', 'i1', 4.0), ('u5', 'i3', 2.0), ('u5', 'i2', 3.0), ('u4', 'i1', 5.0), ('u4', 'i3', 3.0), ('u1', 'i1', 5.0), ('u1', 'i3', 2.5), ('u1', 'i2', 3.0), ('u3', 'i1', 2.5), ('u2', 'i1', 2.0), ('u2', 'i3', 5.0), ('u2', 'i2', 2.5)])
-        
-    def test_GetRatings(self):
-        u1 = {'i1':5.0, 'i2':3.0, 'i3':2.5}
-        u3 = {'i1':2.5}
-        u3ZE = {'i1':2.5, 'i2':0, 'i3':0}
-        self.assertEqual(self.filtNA.getRatings('u1'), u1)
-        self.assertEqual(self.filtNA.getRatings('u3'), u3)
-        self.assertEqual(self.filtZE.getRatings('u1'), u1)
-        self.assertEqual(self.filtZE.getRatings('u3'), u3ZE)
-        
-    def test_GetRatingsMean(self):
-        mean = self.filtNA.getRatingMean(self.filtNA.getRatings('u1'))
-        self.assertAlmostEqual(mean, 3.5, delta=0.001)
-        mean = self.filtNA.getRatingMean(self.filtNA.getRatings('u3'))
-        self.assertAlmostEqual(mean, 2.5, delta=0.001)
-        mean = self.filtZE.getRatingMean(self.filtZE.getRatings('u1'))
-        self.assertAlmostEqual(mean, 3.5, delta=0.001)
-        mean = self.filtZE.getRatingMean(self.filtZE.getRatings('u3'))
-        self.assertAlmostEqual(mean, 0.8333, delta=0.001)
 
-    def test_GetRatingMeans(self):
-        # NA
-        means = self.filtNA.getRatingMeans()
-        means = sorted([x for (i, x) in means])
-        self.assertAlmostEqual(means[0], 2.5, delta=0.001)
-        self.assertAlmostEqual(means[1], 3.0, delta=0.001)
-        self.assertAlmostEqual(means[2], 3.167, delta=0.001)
-        self.assertAlmostEqual(means[3], 3.5, delta=0.001)
-        self.assertAlmostEqual(means[4], 4.0, delta=0.001)
-        # ZE
-        means = self.filtZE.getRatingMeans()
-        means = sorted([x for (i, x) in means])
-        self.assertAlmostEqual(means[0], 0.833, delta=0.001)
-        self.assertAlmostEqual(means[1], 2.667, delta=0.001)
-        self.assertAlmostEqual(means[2], 3.0, delta=0.001)
-        self.assertAlmostEqual(means[3], 3.167, delta=0.001)
-        self.assertAlmostEqual(means[4], 3.5, delta=0.001)
+    
+    def test_GetUserRatings(self):
+        ratings = self.filtNA.getUserRatings('u4')
+        self.assertEqual(ratings, {'i1':5.0, 'i3':3.0})
+        ratings = self.filtZE.getUserRatings('u4')
+        self.assertEqual(ratings, {'i1':5.0, 'i2':0, 'i3':3.0})
 
-    def test_getRatingCounts(self):
-        counts = self.filtNA.getRatingCounts()
+
+    def test_GetUserRatingCounts(self):
+        counts = self.filtNA.getUserRatingCounts()
         self.assertEqual(set(counts), set([('u1', 3), ('u4', 2), ('u5', 3), ('u3', 1), ('u2', 3)]))
-        counts = self.filtZE.getRatingCounts()
+        counts = self.filtZE.getUserRatingCounts()
         self.assertEqual(set(counts), set([('u1', 3), ('u2', 3), ('u3', 3), ('u4', 3), ('u5', 3)]))
+
+ 
+    def test_GetItemRatings(self):
+        ratings = self.filtNA.getItemRatings('i2')
+        self.assertEqual(ratings, {'u1': 3.0, 'u2': 2.5, 'u5': 3.0})
+        ratings = self.filtZE.getItemRatings('i2')
+        self.assertEqual(ratings, {'u1': 3.0, 'u2': 2.5, 'u3':0, 'u4':0, 'u5': 3.0})
+
+
+    def test_GetItemRatingCounts(self):
+        counts = self.filtNA.getItemRatingCounts()
+        self.assertEqual(set(counts), set([('i1', 5), ('i3', 4), ('i2', 3)]))
+        counts = self.filtZE.getItemRatingCounts()
+        self.assertEqual(set(counts), set([('i1', 5), ('i3', 5), ('i2', 5)]))
+
+    
+    def test_GetRatingMean(self):
+        mean = self.filtNA.getRatingMean({'u1': 3.0, 'u2': 2.5, 'u3':0, 'u4':0, 'u5': 3.0})
+        self.assertEqual(mean, 1.7)
+
 
     def test_Euclid (self):
         # NA
@@ -134,6 +123,7 @@ class CollabFiltTest(unittest.TestCase):
         sim =  self.filtZE.pearson({'i1':5.0, 'i2':3.0, 'i3':2.5}, {'i1':4.0, 'i2':3.0, 'i3':2.0})
         self.assertAlmostEqual(sim, 0.945, delta=0.001)
         
+
     def test_SimilarUsers(self):
         # NA
         sim = self.filtNA.similarUsers({'i1':5.0, 'i2':3.0, 'i3':2.5}, n=5, sim='euclid')

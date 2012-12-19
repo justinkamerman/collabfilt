@@ -106,11 +106,11 @@ class Filt:
                         self.users[userId][item] = - mean
                     
 
-    def getRatings (self, userId):
-        """ Get ratings for a specific user
+    def getUserRatings (self, userId):
+        """ Get all item ratings for a specific user
         
         :param userId: 
-        :return: user ratings map
+        :return: user ratings map (indexed by item)
         :rtype: dict
         """
         if self.missingaszero:
@@ -121,18 +121,49 @@ class Filt:
             return self.users[userId]
 
 
-    def getAllRatings (self):
-        """ Get ratings of each user
+    def getUserRatingCounts(self):
+        """ Get the number of items rated by each user
         
-        :return: list of user item rating tuples
-        :rtype: list of (userId, item, rating)
+        :return: list of the number of items ranked by each user
+        :rtype: list of (userId, rated_item_count) tuples
         """
-        tuples = []
-        for (userId, ratings) in self.users.items():
-            for (item, rating) in self.getRatings(userId).items():
-                tuples.append((userId, item, rating))
+        if self.missingaszero:
+            return [(userId, self.getItemCount()) for userId in self.users.keys()]
+        else:
+            return [(userId, len(ratings)) for (userId, ratings) in self.users.items()]
 
-        return tuples
+    
+    def getItemRatings (self, item):
+        """ Get all user ratings for a specific item
+
+        :param item: item name
+        :return: item ratings map (indexed by user)
+        :rtype: dict
+        """
+        ratings = {}
+        for (userId, userRatings) in self.users.items():
+            if userRatings.has_key(item):
+                ratings[userId] = userRatings[item]
+            elif self.missingaszero:
+                ratings[userId] = 0
+        return ratings
+
+
+    def getItemRatingCounts(self):
+        """ Get the number of ratings per item
+        
+        :return: list of the number of ratings for each item
+        :rtype: list of (item, rating_count) tuples
+        """
+        if self.missingaszero:
+            return [(item, self.getUserCount()) for item in self.items]
+
+        else:
+            ratingCounts = defaultdict(int)
+            for  userRatings in self.users.values():
+                for item in userRatings.keys():
+                    ratingCounts[item] += 1
+            return [(item, count) for (item, count) in ratingCounts.items()]
 
     
     def getRatingMean (self, ratings):
@@ -151,27 +182,6 @@ class Filt:
                 total += value
             return (total/float(len(ratings)))
 
-
-    def getRatingMeans(self):
-        """ Get mean rating of each user
-        
-        :return: mean rating given by each user
-        :rtype: list of (userId, rating_mean) tuples
-        """
-        return [(userId, self.getRatingMean(self.getRatings(userId))) 
-                for userId in self.users.keys()]
-
-
-    def getRatingCounts(self):
-        """ Get the number of items rated by each user
-        
-        :return: list of the number of items ranked by each user
-        :rtype: list of (userId, rated_item_count) tuples
-        """
-        if self.missingaszero:
-            return [(userId, self.getItemCount()) for userId in self.users.keys()]
-        else:
-            return [(userId, len(ratings)) for (userId, ratings) in self.users.items()]
 
 
     def euclid (self, user1, user2):
@@ -299,12 +309,13 @@ class Filt:
                 weighting = 1
 
             # Sum similar user ratings for items not rated by the target user
-            for (item, rating) in self.getRatings(user).items():
+            for (item, rating) in self.getUserRatings(user).items():
                 if not target.has_key(item):
                     totalRatings[item] += (rating * weighting)
                     totalSims[item] += abs(weighting)
                 
-        rankings = [(item, total/totalSims[item]) for (item, total) in totalRatings.items() if totalSims[item] != 0]
+        rankings = [(item, total/totalSims[item]) 
+                    for (item, total) in totalRatings.items() if totalSims[item] != 0]
         rankings.sort(key=lambda x: x[1], reverse=True)
         if m:
             del rankings[m:]
