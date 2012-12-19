@@ -4,15 +4,14 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Collabfilt : Collaborative filter implementation in Python inspired by RecommenderLab R package" />
+    <meta name="description" content="CollabFilt: collaborative filter implementation in Python" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>Collabfilt</title>
+    <title>CollabFilt</title>
   </head>
 
   <body>
-
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
         <header class="inner">
@@ -31,48 +30,96 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>Welcome to GitHub Pages.</h3>
+        <h3>Description</h3>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>Item-based collaborative filter implementation in Python inspired
+by RecommenderLab R package. Uses sparse matrix storage
+format. Currently only Euclidean and Pearson Coefficient distance
+metrics are implemented but adding new distance functions to the
+module should be relatively transparent to the rest of the module. A
+simple unit test regression accopanies the module.</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+
+<h3>Usage</h3>
+<p>The module consists of a single implementation file, CollabFilt.py,
+which is loaded into the Python interpreter at runtime with an import
+statement:</p>
+<pre><code>
+>>> from CollabFilt import Filt
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p>To make sure your Python interpreter can locate the module, use one
+of the following methods:
+<ul>
+    <li> Place a copy of collabfilt.py in your working directory.
+    <li> Place a copy of collabfilt.py in your Python module path.
+    <li> Add the location of collabfilt.py to the PYTHONPATH environment variable.
+    <li> Append the location of collabfilt.py using the sys.path.append() function.
+        <pre><code>
+        >>> import sys
+        >>> sys.path.append("directory/containing/CollabFilt.py")
+        >>> from CollabFilt import Filt
+        </code></pre>
+</ul>
+</p>
 
-<h3>Designer Templates</h3>
+<h3>Examples</h3>
+<p>An example within the repository uses CollabFilt to build a
+recommender application with the Book-Crossing dataset from the
+paper <a href="http://www.informatik.uni-freiburg.de/~dbis/Publications/05/WWW05.html">Improving
+Recommendation Lists Through Topic Diversification</a> from
+the <a href="http://www.informatik.uni-freiburg.de/">Institut für
+Informatik</a>.
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p>A simple example is shown below:</p>
 
-<h3>Rather Drive Stick?</h3>
+<pre><code>
+>>> from CollabFilt import Filt
+>>> filt = Filt(missingaszero=False)
+>>> filt.addUser('u1', {'i1':5.0, 'i2':3.0, 'i3':2.5})
+>>> filt.addUser('u2', {'i1':2.0, 'i2':2.5, 'i3':5.0})
+>>> filt.addUser('u3', {'i1':2.5})
+>>> filt.addUser('u4', {'i1':5.0, 'i3':3.0})
+>>> filt.addUser('u5', {'i1':4.0, 'i2':3.0, 'i3':2.0})
+>>> filt.dumpMatrix()
+    id i1 i2 i3
+    u1 5.0 3.0 2.5
+    u2 2.0 2.5 5.0
+    u3 2.5 None None
+    u4 5.0 None 3.0
+    u5 4.0 3.0 2.0
+>>> filt.getUserCount()
+    5
+>>> filt.getItemCount()
+    3
+>>> filt.similarUsers({'i1':2, 'i3':1}, sim='euclid')
+    [('u3', 0.6666666666666666),
+     ('u5', 0.3090169943749474),
+     ('u1', 0.22966848451216434),
+     ('u4', 0.21712927295533244),
+     ('u2', 0.2)]
+>>> filt.predictRatings({'i1':2, 'i3':1}, sim='pearson')
+    [('i2', 1.1666666666666667)]
+</code></pre>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p></p>
 
-<h3>Authors and Contributors</h3>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<h3>Testing</h3>
+<p>Run unit tests by executing CollabFiltTest.py in the ./test directory.</p>
 
-<h3>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
 
 <h3>API Documentation</h3>
 <p><a href="api/index.html">here</a></p>
-
       </section>
     </div>
 
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">Collabfilt maintained by <a href="https://github.com/justinkamerman">justinkamerman</a></p>
+        <p class="copyright">CollabFilt maintained by <a href="https://git.soma.salesforce.com/jkamerman">jkamerman</a></p>
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
-
-    
-
   </body>
 </html>
