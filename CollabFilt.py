@@ -4,11 +4,43 @@ from  math import sqrt
 
 
 class Filt:
-    """ Collaborative Filter
+    """ Item-based collaborative filter implementation in Python
+    inspired by RecommenderLab R packageItem-based collaborative
+    filter implementation. Uses sparse matrix storage format.
+
+    :Example:
+    >>> from CollabFilt import Filt
+    >>> filt = Filt(missingaszero=False)
+    >>> filt.addUser('u1', {'i1':5.0, 'i2':3.0, 'i3':2.5})
+    >>> filt.addUser('u2', {'i1':2.0, 'i2':2.5, 'i3':5.0})
+    >>> filt.addUser('u3', {'i1':2.5})
+    >>> filt.addUser('u4', {'i1':5.0, 'i3':3.0})
+    >>> filt.addUser('u5', {'i1':4.0, 'i2':3.0, 'i3':2.0})
+    >>> filt.dumpMatrix()
+        id i1 i2 i3
+        u1 5.0 3.0 2.5
+        u2 2.0 2.5 5.0
+        u3 2.5 None None
+        u4 5.0 None 3.0
+        u5 4.0 3.0 2.0
+    >>> filt.getUserCount()
+        5
+    >>> filt.getItemCount()
+        3
+    >>> filt.similarUsers({'i1':2, 'i3':1}, sim='euclid')
+        [('u3', 0.6666666666666666),
+         ('u5', 0.3090169943749474),
+         ('u1', 0.22966848451216434),
+         ('u4', 0.21712927295533244),
+         ('u2', 0.2)]
+    >>> filt.predictRatings({'i1':2, 'i3':1}, sim='pearson')
+        [('i2', 1.1666666666666667)]
+
     """
     def __init__ (self, missingaszero=False):
         """ 
-        :param missingaszero: ratings stored as a sparse matrix. True if missing values are considered a rating of zero
+        :param missingaszero: ratings stored as a sparse matrix. True
+        if missing values are considered a rating of zero
         :type missingaszero: Boolean
         """
 
